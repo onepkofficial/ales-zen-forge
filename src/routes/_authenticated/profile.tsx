@@ -119,12 +119,6 @@ function ProfilePage() {
     toast.success("Password changed");
   }
 
-  async function handleDelete() {
-    const { error } = await supabase.rpc as never; // placeholder guard, never executed
-    void error;
-  }
-  void handleDelete;
-
   async function requestDeletion() {
     if (!profile) return;
     const { error } = await supabase.from("notifications").insert({
