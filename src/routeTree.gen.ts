@@ -22,6 +22,7 @@ import { Route as AuthenticatedDepositRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedProductsProductIdRouteImport } from './routes/_authenticated/products.$productId'
+import { Route as AuthenticatedAdminWinnersRouteImport } from './routes/_authenticated/admin/winners'
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin/products'
 import { Route as AuthenticatedAdminDepositsRouteImport } from './routes/_authenticated/admin/deposits'
 
@@ -91,6 +92,12 @@ const AuthenticatedProductsProductIdRoute =
     path: '/products/$productId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminWinnersRoute =
+  AuthenticatedAdminWinnersRouteImport.update({
+    id: '/winners',
+    path: '/winners',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminProductsRoute =
   AuthenticatedAdminProductsRouteImport.update({
     id: '/products',
@@ -117,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/winners': typeof AuthenticatedWinnersRoute
   '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
+  '/admin/winners': typeof AuthenticatedAdminWinnersRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -132,6 +140,7 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
+  '/admin/winners': typeof AuthenticatedAdminWinnersRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
@@ -150,6 +159,7 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/admin/deposits': typeof AuthenticatedAdminDepositsRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
+  '/_authenticated/admin/winners': typeof AuthenticatedAdminWinnersRoute
   '/_authenticated/products/$productId': typeof AuthenticatedProductsProductIdRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/winners'
     | '/admin/deposits'
     | '/admin/products'
+    | '/admin/winners'
     | '/products/$productId'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -183,6 +194,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin/deposits'
     | '/admin/products'
+    | '/admin/winners'
     | '/products/$productId'
     | '/admin'
   id:
@@ -200,6 +212,7 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/_authenticated/admin/deposits'
     | '/_authenticated/admin/products'
+    | '/_authenticated/admin/winners'
     | '/_authenticated/products/$productId'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
@@ -303,6 +316,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProductsProductIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/winners': {
+      id: '/_authenticated/admin/winners'
+      path: '/winners'
+      fullPath: '/admin/winners'
+      preLoaderRoute: typeof AuthenticatedAdminWinnersRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/products': {
       id: '/_authenticated/admin/products'
       path: '/products'
@@ -323,6 +343,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminDepositsRoute: typeof AuthenticatedAdminDepositsRoute
   AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRoute
+  AuthenticatedAdminWinnersRoute: typeof AuthenticatedAdminWinnersRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -330,6 +351,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
   {
     AuthenticatedAdminDepositsRoute: AuthenticatedAdminDepositsRoute,
     AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRoute,
+    AuthenticatedAdminWinnersRoute: AuthenticatedAdminWinnersRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   }
 
