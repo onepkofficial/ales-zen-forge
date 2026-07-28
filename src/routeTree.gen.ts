@@ -26,6 +26,7 @@ import { Route as AuthenticatedAdminWinnersRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin/products'
 import { Route as AuthenticatedAdminDepositsRouteImport } from './routes/_authenticated/admin/deposits'
+import { Route as AuthenticatedAdminBroadcastRouteImport } from './routes/_authenticated/admin/broadcast'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -116,6 +117,12 @@ const AuthenticatedAdminDepositsRoute =
     path: '/deposits',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminBroadcastRoute =
+  AuthenticatedAdminBroadcastRouteImport.update({
+    id: '/broadcast',
+    path: '/broadcast',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/referrals': typeof AuthenticatedReferralsRoute
   '/wallet': typeof AuthenticatedWalletRoute
   '/winners': typeof AuthenticatedWinnersRoute
+  '/admin/broadcast': typeof AuthenticatedAdminBroadcastRoute
   '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -145,6 +153,7 @@ export interface FileRoutesByTo {
   '/wallet': typeof AuthenticatedWalletRoute
   '/winners': typeof AuthenticatedWinnersRoute
   '/': typeof AuthenticatedIndexRoute
+  '/admin/broadcast': typeof AuthenticatedAdminBroadcastRoute
   '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -165,6 +174,7 @@ export interface FileRoutesById {
   '/_authenticated/wallet': typeof AuthenticatedWalletRoute
   '/_authenticated/winners': typeof AuthenticatedWinnersRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/admin/broadcast': typeof AuthenticatedAdminBroadcastRoute
   '/_authenticated/admin/deposits': typeof AuthenticatedAdminDepositsRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/referrals'
     | '/wallet'
     | '/winners'
+    | '/admin/broadcast'
     | '/admin/deposits'
     | '/admin/products'
     | '/admin/users'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/winners'
     | '/'
+    | '/admin/broadcast'
     | '/admin/deposits'
     | '/admin/products'
     | '/admin/users'
@@ -221,6 +233,7 @@ export interface FileRouteTypes {
     | '/_authenticated/wallet'
     | '/_authenticated/winners'
     | '/_authenticated/'
+    | '/_authenticated/admin/broadcast'
     | '/_authenticated/admin/deposits'
     | '/_authenticated/admin/products'
     | '/_authenticated/admin/users'
@@ -356,10 +369,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminDepositsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/broadcast': {
+      id: '/_authenticated/admin/broadcast'
+      path: '/broadcast'
+      fullPath: '/admin/broadcast'
+      preLoaderRoute: typeof AuthenticatedAdminBroadcastRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
 
 interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminBroadcastRoute: typeof AuthenticatedAdminBroadcastRoute
   AuthenticatedAdminDepositsRoute: typeof AuthenticatedAdminDepositsRoute
   AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
@@ -369,6 +390,7 @@ interface AuthenticatedAdminRouteRouteChildren {
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
+    AuthenticatedAdminBroadcastRoute: AuthenticatedAdminBroadcastRoute,
     AuthenticatedAdminDepositsRoute: AuthenticatedAdminDepositsRoute,
     AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRoute,
     AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
