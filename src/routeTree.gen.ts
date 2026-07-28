@@ -9,11 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
-import { Route as ShareDealIdRouteImport } from './routes/share.$dealId'
+import { Route as AuthenticatedDepositRouteImport } from './routes/_authenticated/deposit'
+import { Route as AuthenticatedProductsProductIdRouteImport } from './routes/_authenticated/products.$productId'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -28,50 +35,76 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const ShareDealIdRoute = ShareDealIdRouteImport.update({
-  id: '/share/$dealId',
-  path: '/share/$dealId',
-  getParentRoute: () => rootRouteImport,
+const AuthenticatedDepositRoute = AuthenticatedDepositRouteImport.update({
+  id: '/deposit',
+  path: '/deposit',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedProductsProductIdRoute =
+  AuthenticatedProductsProductIdRouteImport.update({
+    id: '/products/$productId',
+    path: '/products/$productId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
-  '/share/$dealId': typeof ShareDealIdRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/deposit': typeof AuthenticatedDepositRoute
+  '/products/$productId': typeof AuthenticatedProductsProductIdRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
-  '/share/$dealId': typeof ShareDealIdRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/deposit': typeof AuthenticatedDepositRoute
   '/': typeof AuthenticatedIndexRoute
+  '/products/$productId': typeof AuthenticatedProductsProductIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/share/$dealId': typeof ShareDealIdRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/deposit': typeof AuthenticatedDepositRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/products/$productId': typeof AuthenticatedProductsProductIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/share/$dealId'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/deposit'
+    | '/products/$productId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/share/$dealId' | '/'
+  to: '/auth' | '/reset-password' | '/deposit' | '/' | '/products/$productId'
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
-    | '/share/$dealId'
+    | '/reset-password'
+    | '/_authenticated/deposit'
     | '/_authenticated/'
+    | '/_authenticated/products/$productId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
-  ShareDealIdRoute: typeof ShareDealIdRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -93,22 +126,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/share/$dealId': {
-      id: '/share/$dealId'
-      path: '/share/$dealId'
-      fullPath: '/share/$dealId'
-      preLoaderRoute: typeof ShareDealIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_authenticated/deposit': {
+      id: '/_authenticated/deposit'
+      path: '/deposit'
+      fullPath: '/deposit'
+      preLoaderRoute: typeof AuthenticatedDepositRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/products/$productId': {
+      id: '/_authenticated/products/$productId'
+      path: '/products/$productId'
+      fullPath: '/products/$productId'
+      preLoaderRoute: typeof AuthenticatedProductsProductIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDepositRoute: typeof AuthenticatedDepositRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedProductsProductIdRoute: typeof AuthenticatedProductsProductIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDepositRoute: AuthenticatedDepositRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedProductsProductIdRoute: AuthenticatedProductsProductIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -117,18 +161,8 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
-  ShareDealIdRoute: ShareDealIdRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -79,6 +79,233 @@ export type Database = {
           },
         ]
       }
+      deposits: {
+        Row: {
+          admin_note: string | null
+          amount: number
+          created_at: string
+          id: string
+          method: string
+          reviewed_at: string | null
+          screenshot_url: string | null
+          sender_name: string | null
+          sender_number: string | null
+          status: string
+          transaction_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          amount: number
+          created_at?: string
+          id?: string
+          method: string
+          reviewed_at?: string | null
+          screenshot_url?: string | null
+          sender_name?: string | null
+          sender_number?: string | null
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_note?: string | null
+          amount?: number
+          created_at?: string
+          id?: string
+          method?: string
+          reviewed_at?: string | null
+          screenshot_url?: string | null
+          sender_name?: string | null
+          sender_number?: string | null
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      entries: {
+        Row: {
+          amount_paid: number
+          created_at: string
+          id: string
+          product_id: string
+          quantity: number
+          user_id: string
+        }
+        Insert: {
+          amount_paid?: number
+          created_at?: string
+          id?: string
+          product_id: string
+          quantity?: number
+          user_id: string
+        }
+        Update: {
+          amount_paid?: number
+          created_at?: string
+          id?: string
+          product_id?: string
+          quantity?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entries_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          read: boolean
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          read?: boolean
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          read?: boolean
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          draw_date: string | null
+          entry_price: number
+          id: string
+          image_url: string | null
+          status: string
+          title: string
+          total_entries: number
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          draw_date?: string | null
+          entry_price?: number
+          id?: string
+          image_url?: string | null
+          status?: string
+          title: string
+          total_entries?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          draw_date?: string | null
+          entry_price?: number
+          id?: string
+          image_url?: string | null
+          status?: string
+          title?: string
+          total_entries?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          city: string | null
+          country: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          notifications_enabled: boolean
+          phone: string | null
+          referral_code: string | null
+          referred_by: string | null
+          updated_at: string
+          username: string | null
+          wallet_balance: number
+        }
+        Insert: {
+          avatar_url?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          notifications_enabled?: boolean
+          phone?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
+          updated_at?: string
+          username?: string | null
+          wallet_balance?: number
+        }
+        Update: {
+          avatar_url?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          notifications_enabled?: boolean
+          phone?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
+          updated_at?: string
+          username?: string | null
+          wallet_balance?: number
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          bonus_amount: number
+          created_at: string
+          id: string
+          referred_id: string
+          referrer_id: string
+        }
+        Insert: {
+          bonus_amount?: number
+          created_at?: string
+          id?: string
+          referred_id: string
+          referrer_id: string
+        }
+        Update: {
+          bonus_amount?: number
+          created_at?: string
+          id?: string
+          referred_id?: string
+          referrer_id?: string
+        }
+        Relationships: []
+      }
       report_templates: {
         Row: {
           content: Json
@@ -204,6 +431,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_settings: {
         Row: {
           brand_logo_url: string | null
@@ -252,15 +500,59 @@ export type Database = {
         }
         Relationships: []
       }
+      winners: {
+        Row: {
+          announced_at: string
+          city: string | null
+          display_name: string | null
+          entry_id: string | null
+          id: string
+          product_id: string
+          user_id: string
+        }
+        Insert: {
+          announced_at?: string
+          city?: string | null
+          display_name?: string | null
+          entry_id?: string | null
+          id?: string
+          product_id: string
+          user_id: string
+        }
+        Update: {
+          announced_at?: string
+          city?: string | null
+          display_name?: string | null
+          entry_id?: string | null
+          id?: string
+          product_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "winners_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -387,6 +679,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
