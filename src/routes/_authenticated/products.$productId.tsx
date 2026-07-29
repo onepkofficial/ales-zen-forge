@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Countdown } from "@/components/countdown";
 
 export const Route = createFileRoute("/_authenticated/products/$productId")({
   head: () => ({
@@ -139,6 +140,11 @@ function ProductPage() {
               {sold} of {product.total_entries} entries filled · {remaining} remaining · Draw{" "}
               {formatDate(product.draw_date)}
             </p>
+            {product.draw_date && (
+              <p className="text-sm font-semibold tabular-nums text-primary">
+                <Countdown target={product.draw_date} />
+              </p>
+            )}
           </div>
         </div>
 
