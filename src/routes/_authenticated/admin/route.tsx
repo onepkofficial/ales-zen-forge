@@ -6,10 +6,14 @@ import { cn } from "@/lib/utils";
 const TABS = [
   { to: "/admin", label: "Overview" },
   { to: "/admin/deposits", label: "Deposits" },
+  { to: "/admin/withdrawals", label: "Withdrawals" },
   { to: "/admin/products", label: "Products" },
   { to: "/admin/winners", label: "Winners" },
   { to: "/admin/users", label: "Users" },
+  { to: "/admin/promos", label: "Promo codes" },
+  { to: "/admin/tickets", label: "Support" },
   { to: "/admin/broadcast", label: "Broadcast" },
+  { to: "/admin/logs", label: "Audit logs" },
 ] as const;
 
 export const Route = createFileRoute("/_authenticated/admin")({

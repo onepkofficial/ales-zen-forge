@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,6 +7,9 @@ import { useEntryCounts, useProfile } from "@/hooks/use-onepk";
 import { formatPKR, formatDate } from "@/lib/onepk";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Countdown } from "@/components/countdown";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
@@ -44,6 +48,25 @@ function HomePage() {
     },
   });
 
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("all");
+  const [status, setStatus] = useState("all");
+
+  const categories = useMemo(
+    () => Array.from(new Set((products ?? []).map((p) => p.category).filter(Boolean) as string[])),
+    [products],
+  );
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return (products ?? []).filter((p) => {
+      if (q && !`${p.title} ${p.description ?? ""}`.toLowerCase().includes(q)) return false;
+      if (category !== "all" && p.category !== category) return false;
+      if (status !== "all" && p.status !== status) return false;
+      return true;
+    });
+  }, [products, search, category, status]);
+
   return (
     <AppShell>
       <section className="mb-6 rounded-lg border border-border bg-card p-5">
@@ -64,13 +87,52 @@ function HomePage() {
 
       <h1 className="mb-3 text-lg font-semibold">Available products</h1>
 
+      <div className="mb-4 space-y-3">
+        <Input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search products…"
+          aria-label="Search products"
+        />
+        <div className="flex flex-wrap gap-2">
+          {["all", ...categories].map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setCategory(c)}
+              className={cn(
+                "rounded-full border border-border px-3 py-1 text-xs font-medium capitalize",
+                category === c ? "bg-primary text-primary-foreground" : "text-muted-foreground",
+              )}
+            >
+              {c === "all" ? "All categories" : c}
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {["all", "active", "closed", "completed"].map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => setStatus(s)}
+              className={cn(
+                "rounded-full border border-border px-3 py-1 text-xs font-medium capitalize",
+                status === s ? "bg-foreground text-background" : "text-muted-foreground",
+              )}
+            >
+              {s === "all" ? "Any status" : s}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {isLoading ? (
         <p className="text-sm text-muted-foreground">Loading…</p>
-      ) : !products || products.length === 0 ? (
-        <EmptyState message="No products available at the moment." />
+      ) : filtered.length === 0 ? (
+        <EmptyState message="No products match your search." />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((p) => {
+          {filtered.map((p) => {
             const sold = counts?.[p.id] ?? 0;
             const remaining = Math.max(p.total_entries - sold, 0);
             const pct = p.total_entries ? (sold / p.total_entries) * 100 : 0;
@@ -107,6 +169,11 @@ function HomePage() {
                   <p className="text-xs text-muted-foreground">
                     {sold} of {p.total_entries} filled · {remaining} left
                   </p>
+                  {p.draw_date && (
+                    <p className="text-xs font-medium tabular-nums text-primary">
+                      <Countdown target={p.draw_date} />
+                    </p>
+                  )}
                 </div>
               </Link>
             );

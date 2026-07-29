@@ -1,0 +1,14 @@
+{
+  "name": "ONEpk — Lucky Draw & Wallet",
+  "short_name": "ONEpk",
+  "description": "Buy entries in verified ONEpk product draws, manage your wallet and track winners.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f766e",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

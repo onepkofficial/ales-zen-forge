@@ -1,5 +1,11 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
+import { redeemPromo } from "@/lib/onepk.functions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell, EmptyState } from "@/components/app-shell";
 import { useProfile } from "@/hooks/use-onepk";
@@ -32,6 +38,25 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive"> = 
 
 function WalletPage() {
   const { data: profile } = useProfile();
+  const queryClient = useQueryClient();
+  const redeem = useServerFn(redeemPromo);
+  const [promo, setPromo] = useState("");
+  const [redeeming, setRedeeming] = useState(false);
+
+  async function applyPromo(e: React.FormEvent) {
+    e.preventDefault();
+    setRedeeming(true);
+    try {
+      const res = await redeem({ data: { code: promo.trim() } });
+      setPromo("");
+      toast.success(`Promo applied — ${formatPKR(res.bonus)} added`);
+      queryClient.invalidateQueries();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not apply promo code");
+    } finally {
+      setRedeeming(false);
+    }
+  }
 
   const { data: deposits } = useQuery({
     queryKey: ["my-deposits"],
@@ -66,15 +91,37 @@ function WalletPage() {
         <p className="text-sm text-muted-foreground">Wallet balance</p>
         <p className="mt-1 text-3xl font-bold tabular-nums">{formatPKR(profile?.wallet_balance ?? 0)}</p>
         <p className="mt-2 text-xs text-muted-foreground">
-          Withdrawals are disabled. Balance increases only through admin-verified deposits.
+          Balance increases through admin-verified deposits, referral bonuses and promo codes.
         </p>
-        <Link
-          to="/deposit"
-          className="mt-4 inline-flex rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
-        >
-          Add funds
-        </Link>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link
+            to="/deposit"
+            className="inline-flex rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+          >
+            Add funds
+          </Link>
+          <Link
+            to="/withdraw"
+            className="inline-flex rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+          >
+            Withdraw
+          </Link>
+        </div>
       </div>
+
+      <form onSubmit={applyPromo} className="mb-5 flex flex-wrap gap-2 rounded-lg border border-border bg-card p-4">
+        <Input
+          className="min-w-[180px] flex-1"
+          value={promo}
+          onChange={(e) => setPromo(e.target.value.toUpperCase())}
+          placeholder="Have a promo code?"
+          maxLength={30}
+          aria-label="Promo code"
+        />
+        <Button type="submit" variant="secondary" disabled={redeeming || promo.trim().length < 3}>
+          Apply
+        </Button>
+      </form>
 
       <Tabs defaultValue="deposits">
         <TabsList>

@@ -10,6 +10,7 @@ import {
   Shield,
   LogOut,
   Users,
+  LifeBuoy,
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,6 +18,7 @@ import { useIsAdmin, useProfile } from "@/hooks/use-onepk";
 import { formatPKR } from "@/lib/onepk";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { CompleteProfileDialog } from "@/components/complete-profile-dialog";
 
 const NAV = [
   { to: "/", label: "Home", icon: Home },
@@ -86,6 +88,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 {item.label}
               </Link>
             ))}
+            <Link
+              to="/support"
+              className={cn(
+                "rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+                pathname === "/support" && "bg-muted text-foreground",
+              )}
+            >
+              Support
+            </Link>
             {isAdmin && (
               <Link
                 to="/admin"
@@ -105,6 +116,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               className="rounded-md border border-border px-3 py-1.5 text-sm font-semibold tabular-nums"
             >
               {formatPKR(profile?.wallet_balance ?? 0)}
+            </Link>
+            <Link
+              to="/support"
+              aria-label="Support"
+              className="rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground md:hidden"
+            >
+              <LifeBuoy className="h-4 w-4" />
             </Link>
             <Link
               to="/notifications"
@@ -130,6 +148,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-6">{children}</main>
+
+      <CompleteProfileDialog profile={profile ?? null} />
 
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card md:hidden">
         <div className="mx-auto flex max-w-5xl">
