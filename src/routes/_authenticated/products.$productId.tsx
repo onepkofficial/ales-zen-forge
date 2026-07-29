@@ -55,9 +55,12 @@ function ProductPage() {
   const { data: sold = 0 } = useQuery({
     queryKey: ["product-sold", productId],
     queryFn: async () => {
-      const { data, error } = await supabase.from("entries").select("quantity").eq("product_id", productId);
+      const { data, error } = await (supabase.from("product_entry_counts") as any)
+        .select("sold")
+        .eq("product_id", productId)
+        .maybeSingle();
       if (error) throw error;
-      return (data ?? []).reduce((a, r) => a + (r.quantity ?? 0), 0);
+      return Number((data as { sold?: number } | null)?.sold ?? 0);
     },
   });
 
