@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createFileRoute, useNavigate, useSearch, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { applyReferral } from "@/lib/onepk.functions";
 import { toast } from "sonner";
 import { z } from "zod";
