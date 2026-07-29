@@ -600,7 +600,21 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      product_entry_counts: {
+        Row: {
+          product_id: string | null
+          sold: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entries_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       has_role: {
