@@ -108,6 +108,31 @@ function AuthPage() {
     setResetMode(false);
   }
 
+  async function handleGoogle() {
+    setLoading(true);
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin,
+    });
+
+    if (result.error) {
+      setLoading(false);
+      return toast.error(result.error.message || "Google sign-in failed");
+    }
+    if (result.redirected) return;
+
+    if (refCode.trim()) {
+      try {
+        await applyRef({ data: { code: refCode.trim() } });
+      } catch {
+        /* invalid referral codes are simply ignored */
+      }
+    }
+    setLoading(false);
+    toast.success("Signed in with Google");
+    navigate({ to: safeRedirect(), replace: true });
+  }
+
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-surface px-4 py-10">
       <div className="w-full max-w-md">
