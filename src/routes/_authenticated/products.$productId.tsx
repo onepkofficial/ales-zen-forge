@@ -55,7 +55,7 @@ function ProductPage() {
   const { data: sold = 0 } = useQuery({
     queryKey: ["product-sold", productId],
     queryFn: async () => {
-      const { data, error } = await (supabase.from("product_entry_counts") as any)
+      const { data, error } = await supabase.from("product_entry_counts")
         .select("sold")
         .eq("product_id", productId)
         .maybeSingle();

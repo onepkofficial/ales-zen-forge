@@ -24,7 +24,7 @@ export function useIsAdmin() {
     queryFn: async () => {
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) return false;
-      const { data, error } = await (supabase.rpc as any)("is_admin");
+      const { data, error } = await supabase.rpc("is_admin");
       if (error) throw error;
       return !!data;
     },
@@ -35,7 +35,7 @@ export function useEntryCounts() {
   return useQuery({
     queryKey: ["entry-counts"],
     queryFn: async () => {
-      const { data, error } = await (supabase.from("product_entry_counts") as any).select("product_id, sold");
+      const { data, error } = await supabase.from("product_entry_counts").select("product_id, sold");
       if (error) throw error;
       const map: Record<string, number> = {};
       for (const row of (data ?? []) as { product_id: string; sold: number }[]) {

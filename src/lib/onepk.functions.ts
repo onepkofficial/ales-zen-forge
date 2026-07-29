@@ -74,7 +74,7 @@ export const reviewDeposit = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await (context.supabase.rpc as any)("is_admin");
+    const { data: isAdmin } = await context.supabase.rpc("is_admin");
     if (!isAdmin) throw new Error("Forbidden");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -126,7 +126,7 @@ export const declareWinner = createServerFn({ method: "POST" })
     z.object({ productId: z.string().uuid(), entryId: z.string().uuid() }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await (context.supabase.rpc as any)("is_admin");
+    const { data: isAdmin } = await context.supabase.rpc("is_admin");
     if (!isAdmin) throw new Error("Forbidden");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -171,7 +171,7 @@ export const broadcastNotification = createServerFn({ method: "POST" })
     z.object({ title: z.string().trim().min(1).max(120), body: z.string().trim().max(1000) }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await (context.supabase.rpc as any)("is_admin");
+    const { data: isAdmin } = await context.supabase.rpc("is_admin");
     if (!isAdmin) throw new Error("Forbidden");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -227,7 +227,7 @@ export const applyReferral = createServerFn({ method: "POST" })
 export const adminStats = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: isAdmin } = await (context.supabase.rpc as any)("is_admin");
+    const { data: isAdmin } = await context.supabase.rpc("is_admin");
     if (!isAdmin) throw new Error("Forbidden");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -249,7 +249,7 @@ export const adminStats = createServerFn({ method: "GET" })
 export const adminUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: isAdmin } = await (context.supabase.rpc as any)("is_admin");
+    const { data: isAdmin } = await context.supabase.rpc("is_admin");
     if (!isAdmin) throw new Error("Forbidden");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
