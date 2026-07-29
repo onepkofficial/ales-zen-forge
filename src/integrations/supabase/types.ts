@@ -212,6 +212,24 @@ export type Database = {
           },
         ]
       }
+      product_entry_counts: {
+        Row: {
+          product_id: string
+          sold: number
+          updated_at: string
+        }
+        Insert: {
+          product_id: string
+          sold?: number
+          updated_at?: string
+        }
+        Update: {
+          product_id?: string
+          sold?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category: string | null
@@ -610,6 +628,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user"
